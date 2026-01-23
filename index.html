@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Calcule ModeGL</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    background: linear-gradient(135deg, #0a2540, #0f3c68);
+    color: #e5e7eb;
+}
+
+.container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 30px;
+}
+
+h1 {
+    text-align: center;
+    color: #60a5fa;
+    margin-bottom: 30px;
+}
+
+.module {
+    background: #0b1e33;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+}
+
+.module h3 {
+    margin: 0 0 12px;
+    color: #93c5fd;
+}
+
+.inputs {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    background: #102a44;
+    color: white;
+}
+
+.moyenne {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.resultat {
+    margin-top: 30px;
+    font-size: 22px;
+    text-align: center;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+<h1>📘 Calcule ModeGL</h1>
+
+<!-- MODULES -->
+
+<div class="module" data-coef="2" data-type="single">
+<h3>Architecture d’Entreprise (coef 2)</h3>
+<div class="inputs">
+<input type="number" placeholder="Examen final">
+</div>
+<div class="moyenne">Moyenne : <span>--</span></div>
+</div>
+
+<div class="module" data-coef="2">
+<h3>Intelligence Artificielle (coef 2)</h3>
+<div class="inputs">
+<input type="number" placeholder="CC / TP">
+<input type="number" placeholder="Examen">
+</div>
+<div class="moyenne">Moyenne : <span>--</span></div>
+</div>
+
+<div class="module" data-coef="1" data-type="single">
+<h3>Anglais 1 (coef 1)</h3>
+<div class="inputs">
+<input type="number" placeholder="Examen final">
+</div>
+<div class="moyenne">Moyenne : <span>--</span></div>
+</div>
+
+<div class="module" data-coef="1" data-type="single">
+<h3>Calcul de Performance (coef 1)</h3>
+<div class="inputs">
+<input type="number" placeholder="Examen final">
+</div>
+<div class="moyenne">Moyenne : <span>--</span></div>
+</div>
+
+<div class="module" data-coef="3">
+<h3>Ingénierie des Exigences (coef 3)</h3>
+<div class="inputs">
+<input type="number" placeholder="CC / TP">
+<input type="number" placeholder="Examen">
+</div>
+<div class="moyenne">Moyenne : <span>--</span></div>
+</div>
+
+<div class="module" data-coef="3">
+<h3>Technologies Web Avancées (coef 3)</h3>
+<div class="inputs">
+<input type="number" placeholder="TP / CC">
+<input type="number" placeholder="Examen">
+</div>
+<div class="moyenne">Moyenne : <span>--</span></div>
+</div>
+
+<div class="module" data-coef="1" data-systeme="true">
+<h3>TP Système Embarqués (coef 1)</h3>
+<div class="inputs">
+<input type="number" placeholder="CC / TP">
+<input type="number" placeholder="Examen">
+</div>
+<div class="moyenne">Moyenne : <span>--</span></div>
+</div>
+
+<div class="module" data-coef="2">
+<h3>Management de Projet Informatique (coef 2)</h3>
+<div class="inputs">
+<input type="number" placeholder="TP / CC">
+<input type="number" placeholder="Examen">
+</div>
+<div class="moyenne">Moyenne : <span>--</span></div>
+</div>
+
+<div class="module" data-coef="2">
+<h3>User Experience Design (coef 2)</h3>
+<div class="inputs">
+<input type="number" placeholder="TP / CC">
+<input type="number" placeholder="Examen">
+</div>
+<div class="moyenne">Moyenne : <span>--</span></div>
+</div>
+
+<div class="resultat" id="moyenne-generale">
+ Moyenne Générale : --
+</div>
+
+</div>
+
+<script>
+function noteValide(n) {
+    return !isNaN(n) && n >= 0 && n <= 20;
+}
+
+const modules = document.querySelectorAll(".module");
+const resultatGeneral = document.getElementById("moyenne-generale");
+
+document.querySelectorAll("input").forEach(input => {
+    input.addEventListener("input", calculAuto);
+});
+
+function calculAuto() {
+    let somme = 0;
+    let totalCoef = 0;
+
+    modules.forEach(module => {
+        const inputs = module.querySelectorAll("input");
+        const span = module.querySelector("span");
+        const coef = parseInt(module.dataset.coef);
+        let moyenne = null;
+
+        if (inputs.length === 1) {
+            const n = parseFloat(inputs[0].value);
+            if (!noteValide(n)) { span.textContent="--"; return; }
+            moyenne = n;
+        } else {
+            const cc = parseFloat(inputs[0].value);
+            const exam = parseFloat(inputs[1].value);
+            if (!noteValide(cc) || !noteValide(exam)) { span.textContent="--"; return; }
+
+            if (module.dataset.systeme) {
+                moyenne = cc * 0.5 + exam * 0.5;
+            } else {
+                moyenne = cc * 0.4 + exam * 0.6;
+            }
+        }
+
+        span.textContent = moyenne.toFixed(2);
+        span.style.color = moyenne >= 10 ? "#22c55e" : "#ef4444";
+
+        somme += moyenne * coef;
+        totalCoef += coef;
+    });
+
+    if (totalCoef > 0) {
+        const mg = somme / totalCoef;
+        resultatGeneral.textContent = " Moyenne Générale : " + mg.toFixed(2);
+        resultatGeneral.style.color = mg >= 10 ? "#22c55e" : "#ef4444";
+    }
+}
+</script>
+
+</body>
+</html>
