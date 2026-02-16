@@ -72,8 +72,6 @@ input {
 <div class="container">
 <h1>📘 Calcule ModeGL</h1>
 
-<!-- MODULES -->
-
 <div class="module" data-coef="2" data-type="single">
 <h3>Architecture d’Entreprise (coef 2)</h3>
 <div class="inputs">
@@ -125,7 +123,7 @@ input {
 <div class="moyenne">Moyenne : <span>--</span></div>
 </div>
 
-<div class="module" data-coef="1" data-systeme="true">
+<div class="module" data-coef="1">
 <h3>TP Système Embarqués (coef 1)</h3>
 <div class="inputs">
 <input type="number" placeholder="CC / TP">
@@ -153,7 +151,7 @@ input {
 </div>
 
 <div class="resultat" id="moyenne-generale">
- Moyenne Générale : --
+🎯 Moyenne Générale : --
 </div>
 
 </div>
@@ -189,11 +187,8 @@ function calculAuto() {
             const exam = parseFloat(inputs[1].value);
             if (!noteValide(cc) || !noteValide(exam)) { span.textContent="--"; return; }
 
-            if (module.dataset.systeme) {
-                moyenne = cc * 0.5 + exam * 0.5;
-            } else {
-                moyenne = cc * 0.4 + exam * 0.6;
-            }
+            // 🔵 NOUVEAU CALCUL 34% CC – 66% EXAMEN
+            moyenne = cc * 0.34 + exam * 0.66;
         }
 
         span.textContent = moyenne.toFixed(2);
@@ -205,7 +200,7 @@ function calculAuto() {
 
     if (totalCoef > 0) {
         const mg = somme / totalCoef;
-        resultatGeneral.textContent = " Moyenne Générale : " + mg.toFixed(2);
+        resultatGeneral.textContent = "🎯 Moyenne Générale : " + mg.toFixed(2);
         resultatGeneral.style.color = mg >= 10 ? "#22c55e" : "#ef4444";
     }
 }
